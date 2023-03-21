@@ -344,7 +344,7 @@ class _RegisterPageState extends State<RegisterPage> {
               children: [
                 ElevatedButton(
                   onPressed: () {
-                    _showLoginPage();
+                    Navigator.pop(context);
                   },
                   style: TextButton.styleFrom(
                     foregroundColor: Color(color_4),
@@ -426,6 +426,7 @@ class _RegisterPageState extends State<RegisterPage> {
       // Destruye la ruta anterior y no puedes regresar
       // Navigator.pushReplacementNamed(context, "/home");
       // Navigator.of(context).pushReplacementNamed("/home",
+      Navigator.pop(context);
       Navigator.of(context).pushNamed(
         "/login",
         //arguments: HomePageArguments("ola", "No"),
@@ -435,10 +436,6 @@ class _RegisterPageState extends State<RegisterPage> {
     print(nombreTextController.text);
     print(contrasenaTextController.text);
     print(correoTextController.text);
-  }
-
-  void _showLoginPage() {
-    Navigator.of(context).pushNamed("/login");
   }
 
   @override

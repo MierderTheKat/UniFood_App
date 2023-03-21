@@ -12,10 +12,11 @@ export 'package:font_awesome_flutter/font_awesome_flutter.dart';
 export '../Global/colores.dart';
 export '../Global/widgets_create.dart';
 
-
-// Usuario Normal
+// Ambos
 export 'package:unifood/pages/login.dart';
 export 'package:unifood/pages/register.dart';
+
+// Usuario Normal
 export 'package:unifood/pages/U_Normal/profile_page.dart';
 export 'package:unifood/pages/U_Normal/car_page.dart';
 export 'package:unifood/pages/U_Normal/home_page.dart';
@@ -24,6 +25,11 @@ export 'package:unifood/pages/U_Normal/order_page.dart';
 
 
 // Usuario Cafeteria
+export 'package:unifood/pages/U_Cafeteria/profile_page.dart';
+export 'package:unifood/pages/U_Cafeteria/calendar_page.dart';
+export 'package:unifood/pages/U_Cafeteria/home_page.dart';
+export 'package:unifood/pages/U_Cafeteria/crud_page.dart';
+export 'package:unifood/pages/U_Cafeteria/order_page.dart';
 
 
 // Pruebas

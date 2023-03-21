@@ -2,17 +2,17 @@
 
 import '../Global/routes.dart';
 
-class HomePage extends StatefulWidget {
-  HomePage({super.key});
+class CafeHomePage extends StatefulWidget {
+  CafeHomePage({super.key});
   /*
-    late final HomePageArguments datos;
-    HomePage({Key? key, required this.datos}) : super(key:key);
+    late final CafeHomePageArguments datos;
+    CafeHomePage({Key? key, required this.datos}) : super(key:key);
   */
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<CafeHomePage> createState() => _CafeHomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _CafeHomePageState extends State<CafeHomePage> {
 
   @override
   Widget build(BuildContext context) {
@@ -37,8 +37,8 @@ class _HomePageState extends State<HomePage> {
               
           actions: <Widget> [
             IconButton(
-              onPressed: _onPressBtnCar,
-              icon: const Icon(Icons.shopping_cart),
+              onPressed: _onPressBtnCalendar,
+              icon: const Icon(Icons.calendar_month),
               iconSize: 40,
               color: Color(color_2),
             ),
@@ -85,9 +85,9 @@ class _HomePageState extends State<HomePage> {
 
             Card_Home_Chart(
               productsNum: 32,
-              usertype: 'productos',
-              usertype2: 'comprados',
-              usertype3: 'a la semana',
+              usertype: 'total de ventas',
+              usertype2: 'al dia',
+              usertype3: '',
             ),
 
             Divider(
@@ -95,7 +95,7 @@ class _HomePageState extends State<HomePage> {
             ),
 
             Card_Home_Gastado(
-              usertype: 'Gastados en la semana',
+              usertype: 'Ventas del dia',
               gastado: 5340
               ),
 
@@ -119,7 +119,7 @@ class _HomePageState extends State<HomePage> {
                 iconSize: 40,
               ),
               IconButton(
-                onPressed: _onPressBtnMenu,
+                onPressed: _onPressBtnCrud,
                 icon: const Icon(Icons.restaurant),
                 color: Color(color_2),
                 iconSize: 40,
@@ -139,32 +139,32 @@ class _HomePageState extends State<HomePage> {
     );
   }
   void _onPressBtnUser() {
-    print("Boton User");
+    print("Boton User Cafe");
     Navigator.pop(context);
-    Navigator.of(context).pushNamed("/profile");
+    Navigator.of(context).pushNamed("/c_profile");
   }
-  void _onPressBtnCar() {
-    print("Boton Carrito");
+  void _onPressBtnCalendar() {
+    print("Boton Calendario Cafe");
     Navigator.pop(context);
-    Navigator.of(context).pushNamed("/car");
+    Navigator.of(context).pushNamed("/c_calendar");
   }
   void _onPressBtnHome() {
-    print("Boton Home");
+    print("Boton Home Cafe");
   }
-  void _onPressBtnMenu() {
-    print("Boton Menu");
+  void _onPressBtnCrud() {
+    print("Boton CRUD Cafe");
     Navigator.pop(context);
-    Navigator.of(context).pushNamed("/menu");
+    Navigator.of(context).pushNamed("/c_crud");
   }
   void _onPressBtnPedidos() {
-    print("Boton Pedidos");
+    print("Boton Pedidos Cafe");
     Navigator.pop(context);
-    Navigator.of(context).pushNamed("/order");
+    Navigator.of(context).pushNamed("/c_order");
   }
 
 }
 
-List<PieChartSectionData> sectionsChartUser = [
+List<PieChartSectionData> sectionsChartCafe = [
   PieChartSectionData(
     value: 10,
     title: "70%",

@@ -17,6 +17,12 @@ class MyApp extends StatelessWidget {
     "/menu":(context) =>  MenuPage(),
     "/order":(context) =>  OrderPage(),
     // Usuario cafeteria
+    "/c_profile":(context) =>  CafeProfilePage(),
+    "/c_calendar":(context) =>  CafeCalendarPage(),
+    "/c_order":(context) =>  CafeOrderPage(),
+    "/c_crud":(context) =>  CafeCrudPage(),
+    "/c_home":(context) =>  CafeHomePage(),
+
     
   };
 

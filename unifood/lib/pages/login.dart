@@ -21,6 +21,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      //resizeToAvoidBottomInset: false,
       backgroundColor: Color(color_6),
       body: Center(
         child: ListView(
@@ -121,6 +122,52 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
 
+                Divider(),
+
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.pushNamed(context, '/home');
+                      },
+                      style: TextButton.styleFrom(
+                        foregroundColor: Color(color_4),
+                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                        textStyle: const TextStyle(fontSize: 20),
+                        backgroundColor: Color(color_8),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10)),
+                      ),
+                      child: Column(
+                        children: const [
+                          Text('Normal'),
+                        ],
+                      ),
+                    ),
+
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.pushNamed(context, '/c_home');
+                      },
+                      style: TextButton.styleFrom(
+                        foregroundColor: Color(color_4),
+                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                        textStyle: const TextStyle(fontSize: 20),
+                        backgroundColor: Color(color_7),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10)),
+                      ),
+                      child: Column(
+                        children: const [
+                          Text('Cafeteria'),
+                        ],
+                      ),
+                    ),
+
+                  ],
+                )
+
               ],
             ),
           ],
@@ -164,7 +211,7 @@ class _LoginPageState extends State<LoginPage> {
   void _showHomePage(BuildContext context) {
     if (_formKey.currentState!.validate()) {
 
-
+      Navigator.pop(context);
       Navigator.pushNamed(context, '/home', arguments: Datos(matriculaTextController.text,contrasenaTextController.text));
       
 /*

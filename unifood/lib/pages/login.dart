@@ -12,16 +12,23 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   String matriculaValue = "";
   String contrasenaValue = "";
-
+/*
   late TextEditingController matriculaTextController;
   late TextEditingController contrasenaTextController;
+*/
+  TextEditingController matriculaTextController = TextEditingController(text: "");
+  TextEditingController contrasenaTextController = TextEditingController(text: "");
 
   final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
+
+    matriculaTextController.text = '1122222222';
+    contrasenaTextController.text = '123';
+
     return Scaffold(
-      //resizeToAvoidBottomInset: false,
+      resizeToAvoidBottomInset: false,
       backgroundColor: Color(color_6),
       body: Center(
         child: ListView(
@@ -32,19 +39,23 @@ class _LoginPageState extends State<LoginPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
+                
                 Divider(
                   color: Colors.transparent,
                   height: 30,
                 ),
+                
                 Image.asset(
                   "assets/images/logo.png",
                 ),
+                
                 Divider(
                   color: Colors.transparent,
-                  height: 150,
+                  height: 100,
                 ),
+
                 SizedBox(
-                  height: 200,
+                  height: 170,
                   child: Form(
                     key: _formKey,
                     child: Column(
@@ -97,6 +108,7 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
                 ),
+                
                 Divider(
                   color: Colors.transparent,
                   height: 20,
@@ -122,8 +134,8 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
 
+/*
                 Divider(),
-
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -167,7 +179,7 @@ class _LoginPageState extends State<LoginPage> {
 
                   ],
                 )
-
+*/
               ],
             ),
           ],
@@ -176,31 +188,28 @@ class _LoginPageState extends State<LoginPage> {
       bottomNavigationBar: BottomAppBar(
         elevation: 0,
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(right: 25),
-                    child: Text("¿No tienes una cuenta?"),
-                  ),
-                  ElevatedButton(
-                      onPressed: _showRegisterPage,
-                      style: TextButton.styleFrom(
-                        foregroundColor: Color(color_4),
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 30, vertical: 10),
-                        textStyle: const TextStyle(fontSize: 15),
-                        backgroundColor: Color(color_5),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(25)),
-                      ),
-                      child: Text("¡Regístrate!"))
-                ],
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(right: 5),
+                child: Text("¿No tienes una cuenta?"),
               ),
+              ElevatedButton(
+                  onPressed: () async {
+                    _showRegisterPage();
+                  },
+                  style: TextButton.styleFrom(
+                    foregroundColor: Color(color_4),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 30, vertical: 10),
+                    textStyle: const TextStyle(fontSize: 15),
+                    backgroundColor: Color(color_5),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(25)),
+                  ),
+                  child: Text("¡Regístrate!"))
             ],
           ),
         ),
@@ -210,42 +219,41 @@ class _LoginPageState extends State<LoginPage> {
 
   void _showHomePage(BuildContext context) {
     if (_formKey.currentState!.validate()) {
-
-      Navigator.pop(context);
-      Navigator.pushNamed(context, '/home', arguments: Datos(matriculaTextController.text,contrasenaTextController.text));
-      
-/*
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Processing Data')),
-      );
-      // Destruye la ruta anterior y no puedes regresar
-      // Navigator.pushReplacementNamed(context, "/home");
-      // Navigator.of(context).pushReplacementNamed("/home",
-      //Navigator.of(context).pushNamed(
-      //  "/home",
-        /*arguments: HomePageArguments("ola", "No"),
-        MaterialPageRoute(
-          builder: (context) => HomePage(datos: datos[index]),
-        )*/
-      //);
-*/
-
+      loginUser(int.parse(matriculaTextController.text), contrasenaTextController.text).then((value) {
+        if (value.isNotEmpty){
+          //print(value['user1']['nombre']);
+          if (value['user']['rol'] == ('consumidor')){
+            Navigator.pushNamed(context, '/home', arguments: value['user']);
+            print('Consumidor');
+          }
+          else if (value['user']['rol'] == ('vendedor')){
+            Navigator.pushNamed(context, '/c_home', arguments: value['user']);
+            print('Vendedor');
+          }
+        }
+        else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Center(
+              child: Text('Credenciales invalidas'),
+            )),
+          );
+        }
+      });
     }
-    print(matriculaTextController.text);
-    print(contrasenaTextController.text);
   }
 
-  void _showRegisterPage() {
-    Navigator.of(context).pushNamed("/register");
+  Future<void> _showRegisterPage() async {
+    await Navigator.of(context).pushNamed("/register");
+    setState(() {});
   }
 
   @override
   void initState() {
     // TO.DO: implement initState
     super.initState();
-
+/*
     matriculaTextController = TextEditingController();
-    contrasenaTextController = TextEditingController();
+    contrasenaTextController = TextEditingController();*/
   }
 
   @override

@@ -14,39 +14,45 @@ class _CarPageState extends State<CarPage> {
   @override
   Widget build(BuildContext context) {
 
+    final Map userArg = ModalRoute.of(context)!.settings.arguments as Map;
+
     return Scaffold(
       backgroundColor: Color(color_6),
 
       appBar: AppBar(
-        backgroundColor: Color(color_1),
-        elevation: 1,
-        
-        leading: IconButton(
-              onPressed: _onPressBtnUser,
-              icon: const Icon(Icons.person),
+          backgroundColor: Color(color_1),
+          elevation: 1,
+          
+          leading: IconButton(
+                onPressed: (){
+                  _onPressBtnUser(userArg);
+                },
+                icon: const Icon(Icons.person),
+                iconSize: 40,
+                color: Color(color_2),
+              ),
+              
+          actions: <Widget> [
+            IconButton(
+              onPressed: (){
+                _onPressBtnCar(userArg);
+              },
+              icon: const Icon(Icons.shopping_cart),
               iconSize: 40,
               color: Color(color_2),
             ),
-            
-        actions: <Widget> [
-          IconButton(
-            onPressed: _onPressBtnCar,
-            icon: const Icon(Icons.shopping_cart),
-            iconSize: 40,
-            color: Color(color_2),
-          ),
-        ],
-        
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Image.asset(
-              "assets/images/logo_global.png",
-              width: 200,
-            ),
           ],
+          
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Image.asset(
+                "assets/images/logo_global.png",
+                width: 200,
+              ),
+            ],
+          ),
         ),
-      ),
 
       body: Center(
         child: ListView (
@@ -86,19 +92,25 @@ class _CarPageState extends State<CarPage> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget> [
               IconButton(
-                onPressed: _onPressBtnHome,
+                onPressed: (){
+                  _onPressBtnHome(userArg);
+                },
                 icon: const Icon(Icons.home),
                 color: Color(color_2),
                 iconSize: 40,
               ),
               IconButton(
-                onPressed: _onPressBtnMenu,
+                onPressed:  (){
+                  _onPressBtnMenu(userArg);
+                },
                 icon: const Icon(Icons.restaurant),
                 color: Color(color_2),
                 iconSize: 40,
               ),
               IconButton(
-                onPressed: _onPressBtnPedidos,
+                onPressed:  (){
+                  _onPressBtnPedidos(userArg);
+                },
                 icon: const Icon(Icons.edit_document),
                 color: Color(color_2),
                 iconSize: 40,
@@ -130,28 +142,30 @@ class _CarPageState extends State<CarPage> {
   }
 */
 
-  void _onPressBtnUser() {
+  void _onPressBtnUser(userArg) {
     print("Boton User");
     Navigator.pop(context);
-    Navigator.of(context).pushNamed("/profile");
+    Navigator.of(context).pushNamed("/profile", arguments: userArg);
   }
-  void _onPressBtnCar() {
+  void _onPressBtnCar(userArg) {
     print("Boton Carrito");
+    Navigator.pop(context);
+    Navigator.of(context).pushNamed("/car", arguments: userArg);
   }
-  void _onPressBtnHome() {
+  void _onPressBtnHome(userArg) {
     print("Boton Home");
     Navigator.pop(context);
-    Navigator.of(context).pushNamed("/home");
+    Navigator.of(context).pushNamed("/home", arguments: userArg);
   }
-  void _onPressBtnMenu() {
+  void _onPressBtnMenu(userArg) {
     print("Boton Menu");
     Navigator.pop(context);
-    Navigator.of(context).pushNamed("/menu");
+    Navigator.of(context).pushNamed("/menu", arguments: userArg);
   }
-  void _onPressBtnPedidos() {
+  void _onPressBtnPedidos(userArg) {
     print("Boton Pedidos");
     Navigator.pop(context);
-    Navigator.of(context).pushNamed("/order");
+    Navigator.of(context).pushNamed("/order", arguments: userArg);
   }
 
 }

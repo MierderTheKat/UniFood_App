@@ -14,78 +14,45 @@ class _MenuPageState extends State<MenuPage> {
   @override
   Widget build(BuildContext context) {
 
-    Map<String, Map<String, dynamic>> _productos = {
-      'producto1': {
-        'nombre': 'Producto 1',
-        'descripcion': 'Descripción del producto 1',
-        'precio': 100,
-        'imagen': 'assets/images/logo.png',
-      },
-      'producto2': {
-        'nombre': 'Producto 2',
-        'descripcion': 'Descripción del producto 2',
-        'precio': 200,
-        'imagen': 'assets/images/logo.png',
-      },/*
-      'producto3': {
-        'nombre': 'Producto 3',
-        'descripcion': 'Descripción del producto 3',
-        'precio': 200,
-        'imagen': 'assets/images/logo.png',
-      },
-      'producto4': {
-        'nombre': 'Producto 4',
-        'descripcion': 'Descripción del producto 4',
-        'precio': 200,
-        'imagen': 'assets/images/logo.png',
-      },
-      'producto5': {
-        'nombre': 'Producto 5',
-        'descripcion': 'Descripción del producto 5',
-        'precio': 200,
-        'imagen': 'assets/images/logo.png',
-      },
-      'producto6': {
-        'nombre': 'Producto 6',
-        'descripcion': 'Descripción del producto 6',
-        'precio': 200,
-        'imagen': 'assets/images/logo.png',
-      }*/
-    };
+    final Map userArg = ModalRoute.of(context)!.settings.arguments as Map;
 
     return Scaffold(
       backgroundColor: Color(color_6),
 
       appBar: AppBar(
-        backgroundColor: Color(color_1),
-        elevation: 1,
-        
-        leading: IconButton(
-              onPressed: _onPressBtnUser,
-              icon: const Icon(Icons.person),
+          backgroundColor: Color(color_1),
+          elevation: 1,
+          
+          leading: IconButton(
+                onPressed: (){
+                  _onPressBtnUser(userArg);
+                },
+                icon: const Icon(Icons.person),
+                iconSize: 40,
+                color: Color(color_2),
+              ),
+              
+          actions: <Widget> [
+            IconButton(
+              onPressed: (){
+                _onPressBtnCar(userArg);
+              },
+              icon: const Icon(Icons.shopping_cart),
               iconSize: 40,
               color: Color(color_2),
             ),
-            
-        actions: <Widget> [
-          IconButton(
-            onPressed: _onPressBtnCar,
-            icon: const Icon(Icons.shopping_cart),
-            iconSize: 40,
-            color: Color(color_2),
-          ),
-        ],
-        
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Image.asset(
-              "assets/images/logo_global.png",
-              width: 200,
-            ),
           ],
+          
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Image.asset(
+                "assets/images/logo_global.png",
+                width: 200,
+              ),
+            ],
+          ),
         ),
-      ),
 
       body: Center(
         child: ListView(
@@ -149,18 +116,26 @@ class _MenuPageState extends State<MenuPage> {
               ],
             ),
 
-            ListView.builder (
-              itemCount: _productos.length,
-              itemBuilder: (BuildContext context, int index) {
-                return Card_Menu(
-                  nombre: '${_productos['producto${index+1}']!['nombre']}',
-                  descripcion: '${_productos['producto${index+1}']!['descripcion']}',
-                  precio: _productos['producto${index+1}']!['precio'],
-                  imagen: '${_productos['producto${index+1}']!['imagen']}',
-                );
-              },
-              shrinkWrap: true,
-              physics: ClampingScrollPhysics(),
+            FutureBuilder(
+              future: getMenu('alimento'),
+              builder: (context, snapshot) {
+                return snapshot.hasData
+                  ? ListView.builder(
+                    itemCount: snapshot.data?.length,
+                    itemBuilder: (context, index) {
+                      return Card_Menu(
+                      nombre: '${snapshot.data?['producto${index+1}']?['nombre']}',
+                      descripcion: '${snapshot.data?['producto${index+1}']?['descripcion']}',
+                      precio: snapshot.data?['producto${index+1}']?['precio'],
+                      imagen: '${snapshot.data?['producto${index+1}']?['imagen']}',
+                      variaciones: snapshot.data?['producto${index+1}']?['variaciones'],
+                    );
+                    },
+                    shrinkWrap: true,
+                    physics: ClampingScrollPhysics(),
+                  )
+                  : loadingIcons(size: 150, padding: 50,);
+                }
             ),
 
             Row(
@@ -176,13 +151,28 @@ class _MenuPageState extends State<MenuPage> {
               ],
             ),
 
-            Card_Menu(
-              nombre: 'Nombre del Producto',
-              descripcion: 'Descripción del producto',
-              precio: 500,
-              imagen: 'assets/images/logo.png',
+            FutureBuilder(
+              future: getMenu('bebida'),
+              builder: (context, snapshot) {
+                return snapshot.hasData
+                  ? ListView.builder(
+                    itemCount: snapshot.data?.length,
+                    itemBuilder: (context, index) {
+                      return Card_Menu(
+                      nombre: '${snapshot.data?['producto${index+1}']?['nombre']}',
+                      descripcion: '${snapshot.data?['producto${index+1}']?['descripcion']}',
+                      precio: snapshot.data?['producto${index+1}']?['precio'],
+                      imagen: '${snapshot.data?['producto${index+1}']?['imagen']}',
+                      variaciones: snapshot.data?['producto${index+1}']?['variaciones'],
+                    );
+                    },
+                    shrinkWrap: true,
+                    physics: ClampingScrollPhysics(),
+                  )
+                  : loadingIcons(size: 150, padding: 50,);
+                }
             ),
-            
+
           ],
         ),
       ),
@@ -197,19 +187,25 @@ class _MenuPageState extends State<MenuPage> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget> [
               IconButton(
-                onPressed: _onPressBtnHome,
+                onPressed: (){
+                  _onPressBtnHome(userArg);
+                },
                 icon: const Icon(Icons.home),
                 color: Color(color_2),
                 iconSize: 40,
               ),
               IconButton(
-                onPressed: _onPressBtnMenu,
+                onPressed:  (){
+                  _onPressBtnMenu(userArg);
+                },
                 icon: const Icon(Icons.restaurant),
                 color: Color(color_2),
                 iconSize: 40,
               ),
               IconButton(
-                onPressed: _onPressBtnPedidos,
+                onPressed:  (){
+                  _onPressBtnPedidos(userArg);
+                },
                 icon: const Icon(Icons.edit_document),
                 color: Color(color_2),
                 iconSize: 40,
@@ -223,28 +219,30 @@ class _MenuPageState extends State<MenuPage> {
     );
   }
 
-  void _onPressBtnUser() {
+  void _onPressBtnUser(userArg) {
     print("Boton User");
     Navigator.pop(context);
-    Navigator.of(context).pushNamed("/profile");
+    Navigator.of(context).pushNamed("/profile", arguments: userArg);
   }
-  void _onPressBtnCar() {
+  void _onPressBtnCar(userArg) {
     print("Boton Carrito");
     Navigator.pop(context);
-    Navigator.of(context).pushNamed("/car");
+    Navigator.of(context).pushNamed("/car", arguments: userArg);
   }
-  void _onPressBtnHome() {
+  void _onPressBtnHome(userArg) {
     print("Boton Home");
     Navigator.pop(context);
-    Navigator.of(context).pushNamed("/home");
+    Navigator.of(context).pushNamed("/home", arguments: userArg);
   }
-  void _onPressBtnMenu() {
+  void _onPressBtnMenu(userArg) {
     print("Boton Menu");
+    Navigator.pop(context);
+    Navigator.of(context).pushNamed("/menu", arguments: userArg);
   }
-  void _onPressBtnPedidos() {
+  void _onPressBtnPedidos(userArg) {
     print("Boton Pedidos");
     Navigator.pop(context);
-    Navigator.of(context).pushNamed("/order");
+    Navigator.of(context).pushNamed("/order", arguments: userArg);
   }
 
 }

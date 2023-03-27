@@ -2,8 +2,14 @@
 
 import 'pages/Global/routes.dart';
 
-void main() => runApp(MyApp());
-
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  runApp(MyApp());
+}
+ 
 class MyApp extends StatelessWidget {
   MyApp({super.key});
 
@@ -22,13 +28,12 @@ class MyApp extends StatelessWidget {
     "/c_order":(context) =>  CafeOrderPage(),
     "/c_crud":(context) =>  CafeCrudPage(),
     "/c_home":(context) =>  CafeHomePage(),
-
-    
   };
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'UniFood',
       initialRoute: "/login",
       routes: _routes,

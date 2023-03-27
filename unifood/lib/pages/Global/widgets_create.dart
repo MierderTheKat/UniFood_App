@@ -2,6 +2,40 @@
 
 import 'routes.dart';
 
+// loadings
+
+class loadingPizza extends StatelessWidget {
+  final double size;
+  final double padding;
+  const loadingPizza({super.key, required this.size, required this.padding});
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Padding(
+        padding: EdgeInsets.symmetric(vertical: padding),
+        child: Image.asset(sloadingPizza, width: size, height: size,)
+      )
+    );
+  }
+}
+
+class loadingIcons extends StatelessWidget {
+  final double size;
+  final double padding;
+  const loadingIcons({super.key, required this.size, required this.padding});
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Padding(
+        padding: EdgeInsets.symmetric(vertical: padding),
+        child: Image.asset(sloadingIcons, width: size, height: size,)
+      )
+    );
+  }
+}
+
 // AMBOS
 
 class Card_PerfilPhoto extends StatefulWidget {
@@ -363,8 +397,9 @@ class Card_Menu extends StatefulWidget {
   final String descripcion;
   final int precio;
   final String imagen;
+  final Map<dynamic, dynamic> variaciones;
 
-  const Card_Menu({super.key, required this.nombre, required this.descripcion, required this.precio, required this.imagen });
+  const Card_Menu({super.key, required this.nombre, required this.descripcion, required this.precio, required this.imagen, required this.variaciones });
 
   @override
   State<Card_Menu> createState() => _Card_MenuState();
@@ -376,6 +411,7 @@ class _Card_MenuState extends State<Card_Menu> {
   late String _descripcion;
   late int _precio;
   late String _imagen;
+  late Map<dynamic, dynamic> _variaciones;
 
    options(context){
     showModalBottomSheet(
@@ -475,40 +511,35 @@ class _Card_MenuState extends State<Card_Menu> {
 
                   Column(
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 10),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: const [
-                            Text(
-                              'Variación 1',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 14,
+
+                      _variaciones.isNotEmpty
+                        ? ListView.builder(
+                          itemCount: _variaciones.length,
+                          itemBuilder: (context, index) {
+                            return Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 10),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    '${_variaciones['variacion${index+1}']}',
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                  const productCounter(),
+                                ],
                               ),
-                            ),
-                            productCounter(),
-                          ],
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 10),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: const [
-                            Text(
-                              'Variación 1',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 14,
-                              ),
-                            ),
-                            productCounter(),
-                          ],
-                        ),
-                      ),
+                            );
+                          },
+                          shrinkWrap: true,
+                          physics: const ClampingScrollPhysics(),
+                        )
+                        : const loadingIcons(size: 150, padding: 50,),
+
+
                     ],
                   ),
 
@@ -579,6 +610,7 @@ class _Card_MenuState extends State<Card_Menu> {
     _descripcion = widget.descripcion;
     _precio = widget.precio;
     _imagen = widget.imagen;
+    _variaciones = widget.variaciones;
   }
 
   @override

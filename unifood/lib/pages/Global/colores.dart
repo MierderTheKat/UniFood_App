@@ -14,3 +14,9 @@ int color_6 = 0xffFFFFFF;
 int color_7 = 0xff91BC35;
 // Naranja Unipoli
 int color_8 = 0xffEF9500;
+
+//loadings
+
+String sloadingIcons = 'assets/loadings/icons.gif';
+String sloadingPizza = 'assets/loadings/pizza.gif';
+String loadingDefault = 'assets/loadings/icons.gif';

@@ -64,25 +64,37 @@ class _HomePageState extends State<HomePage> {
           padding: const EdgeInsets.only(right: 10, left: 10, top: 40),
           children: [
 
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+            Column(
               children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Bien',
+                      style: TextStyle(
+                        fontSize: 50,
+                        fontWeight: FontWeight.bold,
+                        color: Color(color_8),
+                      ),
+                    ),
+                    Text(
+                      'venido',
+                      style: TextStyle(
+                        fontSize: 50,
+                        fontWeight: FontWeight.bold,
+                        color: Color(color_7),
+                      ),
+                    ),
+                  ],
+                ),
                 Text(
-                  'Bien',
+                  userArg['nombre'].split(' ')[0],
                   style: TextStyle(
                     fontSize: 50,
                     fontWeight: FontWeight.bold,
-                    color: Color(color_8),
+                    color: Color(color_4),
                   ),
-                ),
-                Text(
-                  'venido',
-                  style: TextStyle(
-                    fontSize: 50,
-                    fontWeight: FontWeight.bold,
-                    color: Color(color_7),
-                  ),
-                ),
+                )
               ],
             ),
 

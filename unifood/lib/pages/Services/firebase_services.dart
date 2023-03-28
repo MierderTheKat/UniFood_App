@@ -67,7 +67,7 @@ Future<String> saveUser(context, int matricula, String nombre, String contrasena
   return 'Agregando usuario';
 }
 
-Future<String> updateUser(String docId, int matricula, String nombre, String contrasena, String correo, String imagen) async {
+Future<String> updateUser(context, String docId, int matricula, String nombre, String contrasena, String correo, File? imagen, String urlImagen) async {
 
   Map<dynamic, dynamic> validator = {};
   CollectionReference cRUsers = firestore.collection('user');
@@ -93,12 +93,19 @@ Future<String> updateUser(String docId, int matricula, String nombre, String con
     }
   }
 
+  if(imagen != null){
+    urlImagen = await updateImage(context, imagen, urlImagen);
+    if(urlImagen == 'No se pudo eliminar la imagen'){
+      return urlImagen;
+    }
+  }
+
   await firestore.collection('user').doc(docId).set({
     'matricula': matricula,
     'nombre': nombre,
     'contrasena': contrasena,
     'correo': correo,
-    'imagen': imagen,
+    'imagen': urlImagen,
     'descuento': false,
     'reporte': 0,
     'rol': "consumidor"
@@ -171,9 +178,9 @@ Future<Map> getUser() async {
 
 // Subir imagen
 Future<String> uploadImage(context, File imagen) async {
-  ScaffoldMessenger.of(context).showSnackBar(
+  /*ScaffoldMessenger.of(context).showSnackBar(
     const SnackBar(content: Center(child: Text('Subiendo imagen a la nube'))),
-  );
+  );*/
   final String nameFile = imagen.path.split("/").last;
   Reference ref = storage.ref().child("profilePhotos").child(nameFile);
   final UploadTask uploadTask = ref.putFile(imagen);
@@ -186,22 +193,12 @@ Future<String> uploadImage(context, File imagen) async {
   }
 }
 
-// Subir imagen
-Future<String> updateImage(context, File imagen, String url) async {
-  ScaffoldMessenger.of(context).showSnackBar(
-    const SnackBar(content: Center(child: Text('Eliminado imagen vieja'))),
-  );
+// Editar imagen
+Future<String> updateImage(context, File imagen, String oldUrl) async {
 
-  Reference refDelete = FirebaseStorage.instance.refFromURL(url);
-  print('antes $refDelete');
-  refDelete.delete().then((_) => print('Archivo eliminado correctamente.')).catchError((error) => print('Error al eliminar archivo: $error'));
-  print(refDelete);
-  print('despues $refDelete');
+  Reference refDelete = FirebaseStorage.instance.refFromURL(oldUrl);
+  refDelete.delete().then((_) {print('Archivo eliminado correctamente.');}).catchError((error) {print('Error al eliminar archivo: $error');});
 
-
-  if(1 > 2){
-    String newUrl = await uploadImage(context, imagen);
-    return newUrl;
-  }
-  return "No se pudo eliminar la imagen";
+  String newUrl = await uploadImage(context, imagen);
+  return newUrl;
 }

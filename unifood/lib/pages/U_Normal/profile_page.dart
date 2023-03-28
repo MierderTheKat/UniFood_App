@@ -490,12 +490,14 @@ class _ProfilePageState extends State<ProfilePage> {
     print("Boton Guardar");
     if (_formKey.currentState!.validate()) {
       await updateUser(
+        context,
         userArg['doc_id'],
         int.parse(matriculaTextController.text),
         nombreTextController.text,
         contrasenaTextController.text,
         correoTextController.text,
-        imageFileController.text
+        _image,
+        imageFileController.text,
       ).then((value) {
         if(value=='Agregando usuario'){
           ScaffoldMessenger.of(context).showSnackBar(

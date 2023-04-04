@@ -12,20 +12,16 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   String matriculaValue = "";
   String contrasenaValue = "";
-/*
   late TextEditingController matriculaTextController;
   late TextEditingController contrasenaTextController;
-*/
-  TextEditingController matriculaTextController = TextEditingController(text: "");
-  TextEditingController contrasenaTextController = TextEditingController(text: "");
 
   final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
 
-    matriculaTextController.text = '1122222222';
-    contrasenaTextController.text = '123';
+    matriculaTextController.text = '';
+    contrasenaTextController.text = '';
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -133,53 +129,7 @@ class _LoginPageState extends State<LoginPage> {
                     ],
                   ),
                 ),
-
-/*
-                Divider(),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    ElevatedButton(
-                      onPressed: () {
-                        Navigator.pushNamed(context, '/home');
-                      },
-                      style: TextButton.styleFrom(
-                        foregroundColor: Color(color_4),
-                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                        textStyle: const TextStyle(fontSize: 20),
-                        backgroundColor: Color(color_8),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10)),
-                      ),
-                      child: Column(
-                        children: const [
-                          Text('Normal'),
-                        ],
-                      ),
-                    ),
-
-                    ElevatedButton(
-                      onPressed: () {
-                        Navigator.pushNamed(context, '/c_home');
-                      },
-                      style: TextButton.styleFrom(
-                        foregroundColor: Color(color_4),
-                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                        textStyle: const TextStyle(fontSize: 20),
-                        backgroundColor: Color(color_7),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10)),
-                      ),
-                      child: Column(
-                        children: const [
-                          Text('Cafeteria'),
-                        ],
-                      ),
-                    ),
-
-                  ],
-                )
-*/
+                
               ],
             ),
           ],
@@ -221,13 +171,12 @@ class _LoginPageState extends State<LoginPage> {
     if (_formKey.currentState!.validate()) {
       loginUser(int.parse(matriculaTextController.text), contrasenaTextController.text).then((value) {
         if (value.isNotEmpty){
-          //print(value['user1']['nombre']);
           if (value['user']['rol'] == ('consumidor')){
-            Navigator.pushNamed(context, '/home', arguments: value['user']);
+            Navigator.pushNamed(context, '/home', arguments: value);
             print('Consumidor');
           }
           else if (value['user']['rol'] == ('vendedor')){
-            Navigator.pushNamed(context, '/c_home', arguments: value['user']);
+            Navigator.pushNamed(context, '/c_home', arguments: value);
             print('Vendedor');
           }
         }
@@ -251,9 +200,9 @@ class _LoginPageState extends State<LoginPage> {
   void initState() {
     // TO.DO: implement initState
     super.initState();
-/*
+
     matriculaTextController = TextEditingController();
-    contrasenaTextController = TextEditingController();*/
+    contrasenaTextController = TextEditingController();
   }
 
   @override

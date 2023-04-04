@@ -4,7 +4,7 @@ import '../Global/routes.dart';
 
 class CarPage extends StatefulWidget {
   CarPage({super.key});
-
+  
   @override
   State<CarPage> createState() => _CarPageState();
 }
@@ -13,8 +13,16 @@ class _CarPageState extends State<CarPage> {
 
   @override
   Widget build(BuildContext context) {
-
     final Map userArg = ModalRoute.of(context)!.settings.arguments as Map;
+    Map products = userArg['products'];
+    int total = 0;
+
+    if(products.isNotEmpty){
+      for (var i = 0; i < products.length; i++) {
+        int product = products['${i+1}']['precio'] * products['${i+1}']['cantidad'];
+        total = total + product;
+      }
+    }
 
     return Scaffold(
       backgroundColor: Color(color_6),
@@ -59,25 +67,18 @@ class _CarPageState extends State<CarPage> {
           shrinkWrap: false,
           padding: const EdgeInsets.only(right: 10, left: 10, top: 10),
           children: [
+            products.isNotEmpty
+            ? Column(
+              children: [
+                Card_Car(
+                  userArg: userArg,
+                  products: products,
+                  total: total
+                ),
 
-            Card_Car(
-              nombre: 'Nombre del Producto',
-              descripcion: 'Descripción del producto',
-              precio: 5000,
-              imagen: 'assets/images/logo.png',
-            ),
-
-            Card_Car(
-              nombre: 'Nombre del Producto',
-              descripcion: 'Descripción del producto',
-              precio: 500,
-              imagen: 'assets/images/logo.png',
-            ),
-
-            Card_Car_Order(
-              total: 100,
-            ),
-
+              ],
+            )
+            : Card_Carrito_Vacio(),
           ],
         ),
       ),
@@ -124,46 +125,20 @@ class _CarPageState extends State<CarPage> {
     );
   }
 
-/*
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-      print('+ pressed');
-    });
-  }
-
-  void _decrementCounter() {
-    setState(() {
-      if(_counter > 0){
-        _counter--;
-      }
-      print('- pressed');
-    });
-  }
-*/
-
   void _onPressBtnUser(userArg) {
-    print("Boton User");
     Navigator.pop(context);
     Navigator.of(context).pushNamed("/profile", arguments: userArg);
   }
-  void _onPressBtnCar(userArg) {
-    print("Boton Carrito");
-    Navigator.pop(context);
-    Navigator.of(context).pushNamed("/car", arguments: userArg);
-  }
+  void _onPressBtnCar(userArg) {}
   void _onPressBtnHome(userArg) {
-    print("Boton Home");
     Navigator.pop(context);
     Navigator.of(context).pushNamed("/home", arguments: userArg);
   }
   void _onPressBtnMenu(userArg) {
-    print("Boton Menu");
     Navigator.pop(context);
     Navigator.of(context).pushNamed("/menu", arguments: userArg);
   }
   void _onPressBtnPedidos(userArg) {
-    print("Boton Pedidos");
     Navigator.pop(context);
     Navigator.of(context).pushNamed("/order", arguments: userArg);
   }

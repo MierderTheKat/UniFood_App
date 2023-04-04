@@ -4,10 +4,6 @@ import '../Global/routes.dart';
 
 class CafeHomePage extends StatefulWidget {
   CafeHomePage({super.key});
-  /*
-    late final CafeHomePageArguments datos;
-    CafeHomePage({Key? key, required this.datos}) : super(key:key);
-  */
   @override
   State<CafeHomePage> createState() => _CafeHomePageState();
 }
@@ -17,8 +13,7 @@ class _CafeHomePageState extends State<CafeHomePage> {
   @override
   Widget build(BuildContext context) {
 
-    //final name = ModalRoute.of(context).settings.arguments;
-    //final Datos arguments = ModalRoute.of(context).settings.arguments;
+    final Map userArg = ModalRoute.of(context)!.settings.arguments as Map;
 
     return Scaffold(
 
@@ -29,7 +24,9 @@ class _CafeHomePageState extends State<CafeHomePage> {
           elevation: 1,
           
           leading: IconButton(
-                onPressed: _onPressBtnUser,
+                onPressed: (){
+                  _onPressBtnUser(userArg);
+                },
                 icon: const Icon(Icons.person),
                 iconSize: 40,
                 color: Color(color_2),
@@ -37,7 +34,9 @@ class _CafeHomePageState extends State<CafeHomePage> {
               
           actions: <Widget> [
             IconButton(
-              onPressed: _onPressBtnCalendar,
+              onPressed: (){
+                _onPressBtnCalendar(userArg);
+              },
               icon: const Icon(Icons.calendar_month),
               iconSize: 40,
               color: Color(color_2),
@@ -61,25 +60,37 @@ class _CafeHomePageState extends State<CafeHomePage> {
           padding: const EdgeInsets.only(right: 10, left: 10, top: 40),
           children: [
 
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+            Column(
               children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Bien',
+                      style: TextStyle(
+                        fontSize: 50,
+                        fontWeight: FontWeight.bold,
+                        color: Color(color_8),
+                      ),
+                    ),
+                    Text(
+                      'venido',
+                      style: TextStyle(
+                        fontSize: 50,
+                        fontWeight: FontWeight.bold,
+                        color: Color(color_7),
+                      ),
+                    ),
+                  ],
+                ),
                 Text(
-                  'Bien',
+                  userArg['user']['nombre'].split(' ')[0],
                   style: TextStyle(
                     fontSize: 50,
                     fontWeight: FontWeight.bold,
-                    color: Color(color_8),
+                    color: Color(color_4),
                   ),
-                ),
-                Text(
-                  'venido',
-                  style: TextStyle(
-                    fontSize: 50,
-                    fontWeight: FontWeight.bold,
-                    color: Color(color_7),
-                  ),
-                ),
+                )
               ],
             ),
 
@@ -113,19 +124,25 @@ class _CafeHomePageState extends State<CafeHomePage> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget> [
               IconButton(
-                onPressed: _onPressBtnHome,
+                onPressed: (){
+                  _onPressBtnHome(userArg);
+                },
                 icon: const Icon(Icons.home),
                 color: Color(color_2),
                 iconSize: 40,
               ),
               IconButton(
-                onPressed: _onPressBtnCrud,
+                onPressed:  (){
+                  _onPressBtnCrud(userArg);
+                },
                 icon: const Icon(Icons.restaurant),
                 color: Color(color_2),
                 iconSize: 40,
               ),
               IconButton(
-                onPressed: _onPressBtnPedidos,
+                onPressed:  (){
+                  _onPressBtnPedidos(userArg);
+                },
                 icon: const Icon(Icons.edit_document),
                 color: Color(color_2),
                 iconSize: 40,
@@ -138,59 +155,23 @@ class _CafeHomePageState extends State<CafeHomePage> {
 
     );
   }
-  void _onPressBtnUser() {
-    print("Boton User Cafe");
+
+  void _onPressBtnUser(userArg) {
     Navigator.pop(context);
-    Navigator.of(context).pushNamed("/c_profile");
+    Navigator.of(context).pushNamed("/c_profile", arguments: userArg);
   }
-  void _onPressBtnCalendar() {
-    print("Boton Calendario Cafe");
+  void _onPressBtnCalendar(userArg) {
     Navigator.pop(context);
-    Navigator.of(context).pushNamed("/c_calendar");
+    Navigator.of(context).pushNamed("/c_calendar", arguments: userArg);
   }
-  void _onPressBtnHome() {
-    print("Boton Home Cafe");
-  }
-  void _onPressBtnCrud() {
-    print("Boton CRUD Cafe");
+  void _onPressBtnHome(userArg) {}
+  void _onPressBtnCrud(userArg) {
     Navigator.pop(context);
-    Navigator.of(context).pushNamed("/c_crud");
+    Navigator.of(context).pushNamed("/c_crud", arguments: userArg);
   }
-  void _onPressBtnPedidos() {
-    print("Boton Pedidos Cafe");
+  void _onPressBtnPedidos(userArg) {
     Navigator.pop(context);
-    Navigator.of(context).pushNamed("/c_order");
+    Navigator.of(context).pushNamed("/c_order", arguments: userArg);
   }
 
 }
-
-List<PieChartSectionData> sectionsChartCafe = [
-  PieChartSectionData(
-    value: 10,
-    title: "70%",
-    showTitle: false,
-    color: Colors.purple,
-    radius: 40,
-  ),
-  PieChartSectionData(
-    value: 30,
-    title: "30%",
-    showTitle: false,
-    color: Colors.blue,
-    radius: 40,
-  ),
-  PieChartSectionData(
-    value: 40,
-    title: "70%",
-    showTitle: false,
-    color: Colors.green,
-    radius: 40,
-  ),
-  PieChartSectionData(
-    value: 20,
-    title: "30%",
-    showTitle: false,
-    color: Colors.red,
-    radius: 40,
-  ),
-];

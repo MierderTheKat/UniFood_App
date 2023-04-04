@@ -17,6 +17,8 @@ class _CafeOrderPageState extends State<CafeOrderPage> {
   @override
   Widget build(BuildContext context) {
 
+    final Map userArg = ModalRoute.of(context)!.settings.arguments as Map;
+
     Map<String, Map<String, dynamic>> _pedidos = {
       'pedido1': {
         'nombreAlumno': 'Francisco Javier Rivera',
@@ -59,35 +61,39 @@ class _CafeOrderPageState extends State<CafeOrderPage> {
       
 
       appBar: AppBar(
-        backgroundColor: Color(color_1),
-        elevation: 1,
-        
-        leading: IconButton(
-              onPressed: _onPressBtnUser,
-              icon: const Icon(Icons.person),
+          backgroundColor: Color(color_1),
+          elevation: 1,
+          
+          leading: IconButton(
+                onPressed: (){
+                  _onPressBtnUser(userArg);
+                },
+                icon: const Icon(Icons.person),
+                iconSize: 40,
+                color: Color(color_2),
+              ),
+              
+          actions: <Widget> [
+            IconButton(
+              onPressed: (){
+                _onPressBtnCalendar(userArg);
+              },
+              icon: const Icon(Icons.calendar_month),
               iconSize: 40,
               color: Color(color_2),
             ),
-            
-        actions: <Widget> [
-          IconButton(
-            onPressed: _onPressBtnCalendar,
-            icon: const Icon(Icons.calendar_month),
-            iconSize: 40,
-            color: Color(color_2),
-          ),
-        ],
-        
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Image.asset(
-              "assets/images/logo_global.png",
-              width: 200,
-            ),
           ],
+          
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Image.asset(
+                "assets/images/logo_global.png",
+                width: 200,
+              ),
+            ],
+          ),
         ),
-      ),
 
       body: Center(
         child: ListView(
@@ -341,19 +347,25 @@ class _CafeOrderPageState extends State<CafeOrderPage> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget> [
               IconButton(
-                onPressed: _onPressBtnHome,
+                onPressed: (){
+                  _onPressBtnHome(userArg);
+                },
                 icon: const Icon(Icons.home),
                 color: Color(color_2),
                 iconSize: 40,
               ),
               IconButton(
-                onPressed: _onPressBtnCrud,
+                onPressed:  (){
+                  _onPressBtnCrud(userArg);
+                },
                 icon: const Icon(Icons.restaurant),
                 color: Color(color_2),
                 iconSize: 40,
               ),
               IconButton(
-                onPressed: _onPressBtnPedidos,
+                onPressed:  (){
+                  _onPressBtnPedidos(userArg);
+                },
                 icon: const Icon(Icons.edit_document),
                 color: Color(color_2),
                 iconSize: 40,
@@ -367,28 +379,22 @@ class _CafeOrderPageState extends State<CafeOrderPage> {
     );
   }
 
-  void _onPressBtnUser() {
-    print("Boton User Cafe");
+  void _onPressBtnUser(userArg) {
     Navigator.pop(context);
-    Navigator.of(context).pushNamed("/c_profile");
+    Navigator.of(context).pushNamed("/c_profile", arguments: userArg);
   }
-  void _onPressBtnCalendar() {
-    print("Boton Calendario Cafe");
+  void _onPressBtnCalendar(userArg) {
     Navigator.pop(context);
-    Navigator.of(context).pushNamed("/c_calendar");
+    Navigator.of(context).pushNamed("/c_calendar", arguments: userArg);
   }
-  void _onPressBtnHome() {
-    print("Boton Home Cafe");
+  void _onPressBtnHome(userArg) {
     Navigator.pop(context);
-    Navigator.of(context).pushNamed("/c_home");
+    Navigator.of(context).pushNamed("/c_home", arguments: userArg);
   }
-  void _onPressBtnCrud() {
-    print("Boton CRUD Cafe");
+  void _onPressBtnCrud(userArg) {
     Navigator.pop(context);
-    Navigator.of(context).pushNamed("/c_crud");
+    Navigator.of(context).pushNamed("/c_crud", arguments: userArg);
   }
-  void _onPressBtnPedidos() {
-    print("Boton Pedidos Cafe");
-  }
+  void _onPressBtnPedidos(userArg) {}
 
 }

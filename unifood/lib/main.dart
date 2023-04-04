@@ -11,7 +11,7 @@ void main() async {
 }
  
 class MyApp extends StatelessWidget {
-  MyApp({super.key});
+  MyApp({super.key}); 
 
   final _routes = {
     "/login":(context) =>  LoginPage(),
@@ -37,14 +37,6 @@ class MyApp extends StatelessWidget {
       title: 'UniFood',
       initialRoute: "/login",
       routes: _routes,
-      /*
-        // Si no encuentra la ruta va al home
-        onGenerateRoute: (settings) {
-          return MaterialPageRoute(
-            builder: (context) =>  HomePage(),
-          );
-        },
-      */
     );
   }
 }

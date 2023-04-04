@@ -1,0 +1,82 @@
+{
+  "project_info": {
+    "project_number": "1083188994092",
+    "project_id": "unifood-75d09",
+    "storage_bucket": "unifood-75d09.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1083188994092:android:2fdd0f772c1a10dfc23189",
+        "android_client_info": {
+          "package_name": "com.example.unifood"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1083188994092-movclicnpq1ets4750v1a5a8st03rf6e.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDxmsiL7ysB4koKj9PXMmYhrzRxqFJeHcI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1083188994092-movclicnpq1ets4750v1a5a8st03rf6e.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1083188994092-vebc16sihu2jli92dtkv74qhvsutosk6.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.zzunifood"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1083188994092:android:c2b87a47beec4dd4c23189",
+        "android_client_info": {
+          "package_name": "com.example.zzunifood"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1083188994092-movclicnpq1ets4750v1a5a8st03rf6e.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDxmsiL7ysB4koKj9PXMmYhrzRxqFJeHcI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1083188994092-movclicnpq1ets4750v1a5a8st03rf6e.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1083188994092-vebc16sihu2jli92dtkv74qhvsutosk6.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.zzunifood"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

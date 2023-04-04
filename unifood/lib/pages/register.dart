@@ -52,91 +52,14 @@ class _RegisterPageState extends State<RegisterPage> {
     });
   }
 
-  TextEditingController matriculaTextController = TextEditingController(text: "1122222222");
-  TextEditingController nombreTextController = TextEditingController(text: "Juan");
-  TextEditingController contrasenaTextController = TextEditingController(text: "123");
-  TextEditingController correoTextController = TextEditingController(text: "javie.rivera.is@unipolidgo.edu.mx");
+  TextEditingController matriculaTextController = TextEditingController(text: "");
+  TextEditingController nombreTextController = TextEditingController(text: "");
+  TextEditingController contrasenaTextController = TextEditingController(text: "");
+  TextEditingController correoTextController = TextEditingController(text: "");
   TextEditingController imageFileController = TextEditingController(text: "");
 
   final _formKey = GlobalKey<FormState>();
-/*
-  bool _isClicked = false;
-  File? _image;
 
-  options(context){
-    showDialog(
-      context: context,
-      builder: (BuildContext context){
-        return AlertDialog(
-          contentPadding: EdgeInsets.all(10),
-          backgroundColor: Colors.transparent,
-          shadowColor: Colors.transparent,
-          content: SingleChildScrollView(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                TextButton(
-                  onPressed: () {
-                    _image_('camera');
-                  },
-                  style: TextButton.styleFrom(
-                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-                    backgroundColor: Color(color_8),
-                    foregroundColor: Color(color_4),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(100)
-                    ),
-                  ),
-                  child: FaIcon(
-                    FontAwesomeIcons.cameraRetro,
-                    size: 30,
-                  ),
-                ),
-                VerticalDivider(),
-                TextButton(
-                  onPressed: () {
-                    _image_('gallery');
-                  },
-                  style: TextButton.styleFrom(
-                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-                    backgroundColor: Color(color_8),
-                    foregroundColor: Color(color_4),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(100)
-                    ),
-                  ),
-                  child: FaIcon(
-                    FontAwesomeIcons.image,
-                    size: 30,
-                  ),
-                ),
-              ],
-            )
-          ),
-        );
-      }
-    );
-  }
-
-  Future _image_(String source) async {
-    try{
-      final image;
-      if(source == 'gallery'){
-        image = await ImagePicker().pickImage(source: ImageSource.gallery);
-      }
-      else{
-        image = await ImagePicker().pickImage(source: ImageSource.camera);
-      }
-      if (image == null) return;
-      setState(() {
-        _image = File(image.path);
-      } );
-    }
-    on PlatformException catch (e) {
-      print(e);
-    }
-  }
-*/
   @override
   Widget build(BuildContext context) {
     
@@ -441,10 +364,8 @@ class _RegisterPageState extends State<RegisterPage> {
 
   Future<void> _register(BuildContext context) async {
     if (_formKey.currentState!.validate()) {
-      print(_image);
       if(_image != null){
         await saveUser(
-          context, 
           int.parse(matriculaTextController.text),
           nombreTextController.text,
           contrasenaTextController.text,
@@ -489,109 +410,3 @@ class _RegisterPageState extends State<RegisterPage> {
 
   }
 }
-
-// menu emergente inferior
-/*
-
-options(context){
-    showModalBottomSheet(
-      context: context,
-      builder: (BuildContext context){
-        return SizedBox(
-          height: 150,
-          child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  InkWell(
-                    onTap: (){
-
-                    },
-                    child: Container(
-                      padding: EdgeInsets.all(20),
-                      decoration: BoxDecoration(
-                        border: Border(bottom: BorderSide(width: 1, color: Colors.grey))
-                      ),
-                      child: Row(
-                        children: const [
-                          Expanded(
-                            child: Text('Tomar una foto',style: TextStyle(fontSize: 16),)
-                          ),
-                          Icon(Icons.camera_alt,color: Colors.blue,)
-                        ],
-                      ),
-                    ),
-                  )
-                ],
-              )
-            ),
-        );
-      }
-    );
-  }
-
-
-*/
-
-
-// Botones de foto e imagen
-/*
-                  TextButton(
-                    onPressed: () {
-                      options(context);
-                    },
-                    style: TextButton.styleFrom(
-                      padding: EdgeInsets.only(left: 15, right: 15, top: 15),
-                      backgroundColor: Color(color_8),
-                      foregroundColor: Color(color_4),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(25)
-                      ),
-                    ),
-                    child: FaIcon(
-                      FontAwesomeIcons.solidUser,
-                      size: 90,
-                    ),
-                  ),
-
-
-                  TextButton(
-                    onPressed: () {
-                      _image_('camera');
-                    },
-                    style: TextButton.styleFrom(
-                      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-                      backgroundColor: Color(color_8),
-                      foregroundColor: Color(color_4),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(100)
-                      ),
-                    ),
-                    child: FaIcon(
-                      FontAwesomeIcons.cameraRetro,
-                      size: 30,
-                    ),
-                  ),
-
-                  TextButton(
-                    onPressed: () {
-                      _image_('gallery');
-                    },
-                    style: TextButton.styleFrom(
-                      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-                      backgroundColor: Color(color_8),
-                      foregroundColor: Color(color_4),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(100)
-                      ),
-                    ),
-                    child: FaIcon(
-                      FontAwesomeIcons.image,
-                      size: 30,
-                    ),
-                  ),
-
-*/
-
-
-
-

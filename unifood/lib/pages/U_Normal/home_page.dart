@@ -4,10 +4,7 @@ import '../Global/routes.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({super.key});
-  /*
-    late final HomePageArguments datos;
-    HomePage({Key? key, required this.datos}) : super(key:key);
-  */
+  
   @override
   State<HomePage> createState() => _HomePageState();
 }
@@ -88,7 +85,7 @@ class _HomePageState extends State<HomePage> {
                   ],
                 ),
                 Text(
-                  userArg['nombre'].split(' ')[0],
+                  userArg['user']['nombre'].split(' ')[0],
                   style: TextStyle(
                     fontSize: 50,
                     fontWeight: FontWeight.bold,
@@ -159,59 +156,23 @@ class _HomePageState extends State<HomePage> {
 
     );
   }
+
   void _onPressBtnUser(userArg) {
-    print("Boton User");
     Navigator.pop(context);
     Navigator.of(context).pushNamed("/profile", arguments: userArg);
   }
   void _onPressBtnCar(userArg) {
-    print("Boton Carrito");
     Navigator.pop(context);
     Navigator.of(context).pushNamed("/car", arguments: userArg);
   }
-  void _onPressBtnHome(userArg) {
-    print("Boton Home");
-  }
+  void _onPressBtnHome(userArg) {}
   void _onPressBtnMenu(userArg) {
-    print("Boton Menu");
     Navigator.pop(context);
     Navigator.of(context).pushNamed("/menu", arguments: userArg);
   }
   void _onPressBtnPedidos(userArg) {
-    print("Boton Pedidos");
     Navigator.pop(context);
     Navigator.of(context).pushNamed("/order", arguments: userArg);
   }
 
 }
-
-List<PieChartSectionData> sectionsChartUser = [
-  PieChartSectionData(
-    value: 10,
-    title: "70%",
-    showTitle: false,
-    color: Colors.purple,
-    radius: 40,
-  ),
-  PieChartSectionData(
-    value: 30,
-    title: "30%",
-    showTitle: false,
-    color: Colors.blue,
-    radius: 40,
-  ),
-  PieChartSectionData(
-    value: 40,
-    title: "70%",
-    showTitle: false,
-    color: Colors.green,
-    radius: 40,
-  ),
-  PieChartSectionData(
-    value: 20,
-    title: "30%",
-    showTitle: false,
-    color: Colors.red,
-    radius: 40,
-  ),
-];

@@ -10,67 +10,48 @@ class OrderPage extends StatefulWidget {
 }
 
 class _OrderPageState extends State<OrderPage> {
+  
+  final List<String> _months = [
+    'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+    'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
+  ];
+  late String _selectedMonth = '';
+  late List<int> _years = [];
+  late int _selectedYear = 1;
+  late int _selectedYearsend = 1;
+
+  @override
+  void initState() {
+    super.initState();
+    DateTime now = DateTime.now();
+    int year = now.year;
+    int month = now.month;
+    _years = List.generate(12, (index) => year - index);
+    _selectedYear = year;
+    _selectedYearsend = year;
+    _selectedMonth = _months[month-1];
+  }
 
   @override
   Widget build(BuildContext context) {
 
     final Map userArg = ModalRoute.of(context)!.settings.arguments as Map;
 
-    Map<String, Map<String, dynamic>> _pedidos = {
-      'pedido1': {
-        'nombreAlumno': 'Francisco Javier Rivera',
-        'orden': 'No. de Orden',
-        'fecha': '17/03/22',
-        'hora': '10:15 AM',
-        'productos': {
-          'producto1': {
-            'nombreProducto': 'Burrito Azada',
-            'cantidadProducto': 16,
-          },
-          'producto2': {
-            'nombreProducto': 'Burrito Arrachera',
-            'cantidadProducto': 16,
-          },  
-        },
-        'total': 32,
-      },
-      'pedido2': {
-        'nombreAlumno': 'Yasser Francisco Alvarez Esque',
-        'orden': 'No. de Orden',
-        'fecha': '17/03/22',
-        'hora': '10:15 AM',
-        'productos': {
-          'producto1': {
-            'nombreProducto': 'Gordita Tostada',
-            'cantidadProducto': 16,
-          },
-          'producto2': {
-            'nombreProducto': 'Torta Polla',
-            'cantidadProducto': 16,
-          },
-        },
-        'total': 32,
-      },
-    };
-    
-    DateTime now = DateTime.now();
-    int year = now.year;
-    int month = now.month;
-
-    List<int> _years = List.generate(10, (index) => year - index);
-    int _selectedYear = year;
-
-
-    List<String> _months = [
-      'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
-      'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
-    ];
-    String _selectedMonth = _months[month-1];
+    Future<void> valueChange (String month, int year) async {
+      setState(() {
+        _selectedYearsend = 2015;
+        _selectedMonth = month;
+        _selectedYear = year;
+      });
+      await Future.delayed(const Duration(seconds: 1));
+      setState(() {
+        _selectedYearsend = year;
+      });
+    }
 
 
     return Scaffold(
       backgroundColor: Color(color_6),
-      
 
       appBar: AppBar(
           backgroundColor: Color(color_1),
@@ -126,10 +107,7 @@ class _OrderPageState extends State<OrderPage> {
                     underline: Container(height: 0),
                     value: _selectedYear,
                     onChanged: (year) {
-                      setState(() {
-                        _selectedYear = year!;
-                        print(_selectedYear);
-                      });
+                      valueChange(_selectedMonth,year!);
                     },
                     items: _years.map((int year) {
                       return DropdownMenuItem<int>(
@@ -147,10 +125,7 @@ class _OrderPageState extends State<OrderPage> {
                     underline: Container(height: 0),
                     value: _selectedMonth,
                     onChanged: (String? month) {
-                      setState(() {
-                        _selectedMonth = month!;
-                        print(_selectedMonth);
-                      });
+                      valueChange(month!,_selectedYear);
                     },
                     items: _months.map((String month) {
                       return DropdownMenuItem<String>(
@@ -169,25 +144,29 @@ class _OrderPageState extends State<OrderPage> {
               thickness: 3,
             ),
 
-            ListView.builder (
-              shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(),
-              itemCount: _pedidos.length,
-              itemBuilder: (BuildContext context, int index) {
-                return Card_Pedidos_Accordion(
-                nombreAlumno:'${_pedidos['pedido${index+1}']!['nombreAlumno']}',
-                orden:'${_pedidos['pedido${index+1}']!['orden']}',
-                fecha:'${_pedidos['pedido${index+1}']!['fecha']}',
-                hora:'${_pedidos['pedido${index+1}']!['hora']}',
-                productos: _pedidos['pedido${index+1}']!['productos'],
-                /*nombreProducto:'${_pedidos['pedido${index+1}']!['productos']!['nombreProducto${index+1}']}',
-                cantidadProducto:_pedidos['pedido${index+1}']!['productos']!['cantidadProducto${index+1}'],*/
-                total:_pedidos['pedido${index+1}']!['total'],
-                );
-              },
-              
+            FutureBuilder(
+              future: getOrder(userArg['user']['doc_id'],_selectedYearsend,_selectedMonth),
+              builder: (context, snapshot) {
+                return snapshot.hasData
+                  ? ListView.builder(
+                    reverse: true,
+                    itemCount: snapshot.data?.length,
+                    itemBuilder: (context, index) {
+                      return Card_Pedidos_Accordion(
+                        nombreAlumno: '${snapshot.data?['${index+1}']!['userName']}',
+                        orden: '${snapshot.data?['${index+1}']!['nOrder']}',
+                        fecha: snapshot.data?['${index+1}']!['fecha'],
+                        hora: snapshot.data?['${index+1}']!['hora'],
+                        productos: snapshot.data?['${index+1}']!['menu'],
+                        total: snapshot.data?['${index+1}']!['costoTotal'],
+                      );
+                    },
+                    shrinkWrap: true,
+                    physics: ClampingScrollPhysics(),
+                  )
+                  : loadingIcons(size: 150, padding: 50,);
+                }
             ),
-            
           ],
         ),
       ),
@@ -235,29 +214,21 @@ class _OrderPageState extends State<OrderPage> {
   }
 
   void _onPressBtnUser(userArg) {
-    print("Boton User");
     Navigator.pop(context);
     Navigator.of(context).pushNamed("/profile", arguments: userArg);
   }
   void _onPressBtnCar(userArg) {
-    print("Boton Carrito");
     Navigator.pop(context);
     Navigator.of(context).pushNamed("/car", arguments: userArg);
   }
   void _onPressBtnHome(userArg) {
-    print("Boton Home");
     Navigator.pop(context);
     Navigator.of(context).pushNamed("/home", arguments: userArg);
   }
   void _onPressBtnMenu(userArg) {
-    print("Boton Menu");
     Navigator.pop(context);
     Navigator.of(context).pushNamed("/menu", arguments: userArg);
   }
-  void _onPressBtnPedidos(userArg) {
-    print("Boton Pedidos");
-    Navigator.pop(context);
-    Navigator.of(context).pushNamed("/order", arguments: userArg);
-  }
+  void _onPressBtnPedidos(userArg) {}
 
 }

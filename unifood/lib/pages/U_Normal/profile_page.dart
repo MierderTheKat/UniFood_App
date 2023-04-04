@@ -63,13 +63,13 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
 
-    final Map userArg = ModalRoute.of(context)!.settings.arguments as Map;
+    Map userArg = ModalRoute.of(context)!.settings.arguments as Map;
 
-    matriculaTextController.text = userArg['matricula'].toString();
-    nombreTextController.text = userArg['nombre'];
-    contrasenaTextController.text = userArg['contrasena'];
-    correoTextController.text = userArg['correo'];
-    imageFileController.text = userArg['imagen'];
+    matriculaTextController.text = userArg['user']['matricula'].toString();
+    nombreTextController.text = userArg['user']['nombre'];
+    contrasenaTextController.text = userArg['user']['contrasena'];
+    correoTextController.text = userArg['user']['correo'];
+    imageFileController.text = userArg['user']['imagen'];
 
     return Scaffold(
       backgroundColor: Color(color_6),
@@ -159,26 +159,6 @@ class _ProfilePageState extends State<ProfilePage> {
                                     image: NetworkImage(imageFileController.text),
                                   )
 
-                                  /*
-                                  Image.network(
-                                    imageFileController.text,
-                                    frameBuilder: (BuildContext context, Widget child, int? frame, bool? wasSynchronouslyLoaded) {
-                                      return Container(
-                                        child: child,
-                                      );
-                                    },
-                                    loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
-                                      return Center(child: child);
-                                    },
-                                  ),
-
-                                  Image.network(
-                                    imageFileController.text,
-                                    fit: BoxFit.cover,
-                                    loadingBuilder:(context, child, loadingProgress) {
-                                      return loadingIcons(size: 250, padding: 0,);
-                                    },
-                                  ),*/
                                 ),
                               )
                               : TextButton(
@@ -407,7 +387,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 
                       ElevatedButton(
                         onPressed: () async {
-                          _onPressBtnSave(userArg);
+                          userArg = await _onPressBtnSave(userArg);
                         },
                         style: TextButton.styleFrom(
                           foregroundColor: Color(color_4),
@@ -478,64 +458,55 @@ class _ProfilePageState extends State<ProfilePage> {
 
 
   void _onPressBtnCancel(userArg) {
-    print("Boton Cancel");
-    matriculaTextController.text = userArg['matricula'].toString();
-    nombreTextController.text = userArg['nombre'];
-    contrasenaTextController.text = userArg['contrasena'];
-    correoTextController.text = userArg['correo'];
-    setState(() {});
+    matriculaTextController.text = userArg['user']['matricula'].toString();
+    nombreTextController.text = userArg['user']['nombre'];
+    contrasenaTextController.text = userArg['user']['contrasena'];
+    correoTextController.text = userArg['user']['correo'];
   }
   
-  Future<void> _onPressBtnSave(userArg) async {
-    print("Boton Guardar");
+  Future<Map> _onPressBtnSave(userArg) async {
     if (_formKey.currentState!.validate()) {
       await updateUser(
-        context,
-        userArg['doc_id'],
+        userArg['user']['doc_id'],
         int.parse(matriculaTextController.text),
         nombreTextController.text,
         contrasenaTextController.text,
         correoTextController.text,
         _image,
         imageFileController.text,
-      ).then((value) {
-        if(value=='Agregando usuario'){
+      ).then((value) async {
+        if(value=='Editando usuario'){
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Center(child: Text(value))),
           );
-          Navigator.pop(context);
+          Map newdata = await getUser(userArg['user']['doc_id']);
+          if (newdata.isNotEmpty){
+            userArg = newdata;
+          }
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Center(child: Text(value))),
           );
-          Future.delayed(const Duration(seconds: 10));
         }
       });
     }
+    return userArg;
   }
 
-  void _onPressBtnUser(userArg) {
-    print("Boton User");
-    Navigator.pop(context);
-    Navigator.of(context).pushNamed("/profile", arguments: userArg);
-  }
+  void _onPressBtnUser(userArg) {}
   void _onPressBtnCar(userArg) {
-    print("Boton Carrito");
     Navigator.pop(context);
     Navigator.of(context).pushNamed("/car", arguments: userArg);
   }
   void _onPressBtnHome(userArg) {
-    print("Boton Home");
     Navigator.pop(context);
     Navigator.of(context).pushNamed("/home", arguments: userArg);
   }
   void _onPressBtnMenu(userArg) {
-    print("Boton Menu");
     Navigator.pop(context);
     Navigator.of(context).pushNamed("/menu", arguments: userArg);
   }
   void _onPressBtnPedidos(userArg) {
-    print("Boton Pedidos");
     Navigator.pop(context);
     Navigator.of(context).pushNamed("/order", arguments: userArg);
   }

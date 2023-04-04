@@ -398,8 +398,10 @@ class Card_Menu extends StatefulWidget {
   final int precio;
   final String imagen;
   final Map<dynamic, dynamic> variaciones;
+  final Map<dynamic, dynamic> userArg;
 
-  const Card_Menu({super.key, required this.nombre, required this.descripcion, required this.precio, required this.imagen, required this.variaciones });
+
+  const Card_Menu({super.key, required this.nombre, required this.descripcion, required this.precio, required this.imagen, required this.variaciones, required this.userArg });
 
   @override
   State<Card_Menu> createState() => _Card_MenuState();
@@ -412,6 +414,61 @@ class _Card_MenuState extends State<Card_Menu> {
   late int _precio;
   late String _imagen;
   late Map<dynamic, dynamic> _variaciones;
+  late Map<dynamic, dynamic> _userArg;
+  late List<int> contadores;
+  int total = 0;
+
+  void _incCounter(int index) {
+    setState(() {
+      if(contadores[index] < 20){
+        contadores[index]++;
+        total = total + _precio;
+        Navigator.pop(context);
+        options(context);
+      }
+    });
+  }
+
+  void _decCounter(int index) {
+    setState(() {
+      if(contadores[index] > 0){
+        contadores[index]--;
+        total = total - _precio;
+        Navigator.pop(context);
+        options(context);
+      }
+    });
+  }
+
+  void agregarCarrito() {
+    for (var i = 0; i < contadores.length; i++) {
+      if (contadores[i] > 0) {
+        Map<String, dynamic> nuevosDatos = {
+          '${_userArg['products'].length+1}': {
+            'nombre': _nombre,
+            'nombrevar': _variaciones['variacion${i+1}'],
+            'precio': _precio,
+            'cantidad': contadores[i],
+            'imagen': _imagen,
+          }
+        };
+        _userArg['products'].addAll(nuevosDatos);
+      }
+    }
+    Navigator.pop(context);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _nombre = widget.nombre;
+    _descripcion = widget.descripcion;
+    _precio = widget.precio;
+    _imagen = widget.imagen;
+    _variaciones = widget.variaciones;
+    _userArg = widget.userArg;
+    contadores = List.generate(_variaciones.length, (index) => 0);
+  }
 
    options(context){
     showModalBottomSheet(
@@ -463,19 +520,29 @@ class _Card_MenuState extends State<Card_Menu> {
                         ),
                       ),
 
-                      Container(
-                        width: 70,
-                        height: 70,
-                        decoration: BoxDecoration(
-                          image: DecorationImage(
-                            image: AssetImage('$_imagen'),
-                            fit: BoxFit.scaleDown,
+                      Padding(
+                        padding: const EdgeInsets.only(right: 10),
+                        child: Container(
+                          width: 70,
+                          height: 70,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10.0),
+                            color: Color(color_5)
                           ),
-                          borderRadius: BorderRadius.circular(10.0),
-                          color: Color(color_5)
+                          child:
+                          FadeInImage(
+                            placeholder: AssetImage(loadingDefault),
+                            image: NetworkImage('$_imagen'),
+                            imageErrorBuilder: (context, error, stackTrace) {
+                              return const Image(image: AssetImage('assets/images/logo.png'));
+                            },
+                            placeholderErrorBuilder: (context, error, stackTrace) {
+                              return const Image(image: AssetImage('assets/images/logo.png'));
+                            },
+                            
+                          )
                         ),
                       ),
-
                     ],
                   ),
 
@@ -511,7 +578,6 @@ class _Card_MenuState extends State<Card_Menu> {
 
                   Column(
                     children: [
-
                       _variaciones.isNotEmpty
                         ? ListView.builder(
                           itemCount: _variaciones.length,
@@ -529,7 +595,69 @@ class _Card_MenuState extends State<Card_Menu> {
                                       fontSize: 14,
                                     ),
                                   ),
-                                  const productCounter(),
+                                  Container(
+                                    width: 90,
+                                    height: 30,
+                                    decoration: BoxDecoration(
+                                      color: Color(color_5),
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      children: [
+
+                                        Container(
+                                          width: 30,
+                                          height: 30,
+                                          decoration: BoxDecoration(
+                                            color: Color(color_8),
+                                            borderRadius: BorderRadius.circular(10),
+                                          ),
+                                          child: IconButton(
+                                            icon: Icon(
+                                              Icons.remove,
+                                              color: Color(color_4),
+                                              size: 15,
+                                            ),
+                                            onPressed: () {
+                                              _decCounter(index);
+                                            },
+                                          ),
+                                        ),
+
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(horizontal: 0),
+                                          child: Text(
+                                            '${contadores[index]}',
+                                            style: const TextStyle(
+                                                fontWeight: FontWeight.w500,
+                                                fontSize: 17,
+                                              ),
+                                          ),
+                                        ),
+
+                                        Container(
+                                          width: 30,
+                                          height: 30,
+                                          decoration: BoxDecoration(
+                                            color: Color(color_7),
+                                            borderRadius: BorderRadius.circular(10),
+                                          ),
+                                          child: IconButton(
+                                            icon: Icon(
+                                              Icons.add,
+                                              color: Color(color_4),
+                                              size: 15,
+                                            ),
+                                            onPressed: () {
+                                              _incCounter(index);
+                                            },
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
                                 ],
                               ),
                             );
@@ -538,8 +666,6 @@ class _Card_MenuState extends State<Card_Menu> {
                           physics: const ClampingScrollPhysics(),
                         )
                         : const loadingIcons(size: 150, padding: 50,),
-
-
                     ],
                   ),
 
@@ -558,7 +684,9 @@ class _Card_MenuState extends State<Card_Menu> {
                             borderRadius: BorderRadius.circular(25)
                           ),
                         ),
-                        onPressed: (){},
+                        onPressed: (){
+                          agregarCarrito();
+                        },
                         child: const Text('Agregar al carrito')
                       ),
                       Row(
@@ -579,7 +707,7 @@ class _Card_MenuState extends State<Card_Menu> {
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                 Text(
-                                  'MX\$ $_precio',
+                                  'MX\$ $total',
                                   style: const TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.w500,
@@ -600,17 +728,6 @@ class _Card_MenuState extends State<Card_Menu> {
         );
       }
     );
-  }
-
-
-  @override
-  void initState() {
-    super.initState();
-    _nombre = widget.nombre;
-    _descripcion = widget.descripcion;
-    _precio = widget.precio;
-    _imagen = widget.imagen;
-    _variaciones = widget.variaciones;
   }
 
   @override
@@ -682,15 +799,21 @@ class _Card_MenuState extends State<Card_Menu> {
                       width: 70,
                       height: 70,
                       decoration: BoxDecoration(
-                        image: DecorationImage(
-                          image: AssetImage('$_imagen'),
-                          fit: BoxFit.scaleDown,
-                        ),
                         borderRadius: BorderRadius.circular(10.0),
                         color: Color(color_5)
                       ),
+                      child:
+                      FadeInImage(
+                        placeholder: AssetImage(loadingDefault),
+                        image: NetworkImage('$_imagen'),
+                        imageErrorBuilder: (context, error, stackTrace) {
+                          return const Image(image: AssetImage('assets/images/logo.png'));
+                        },
+                        placeholderErrorBuilder: (context, error, stackTrace) {
+                          return const Image(image: AssetImage('assets/images/logo.png'));
+                        },
+                      )
                     ),
-
                   ],
                 ),
 
@@ -737,12 +860,11 @@ class _Card_MenuState extends State<Card_Menu> {
 // Carrito Card
 class Card_Car extends StatefulWidget {
 
-  final String nombre;
-  final String descripcion;
-  final int precio;
-  final String imagen;
+  final Map<dynamic, dynamic> products;
+  final Map<dynamic, dynamic> userArg;
+  final int total;
 
-  const Card_Car({super.key, required this.nombre, required this.descripcion, required this.precio, required this.imagen });
+  const Card_Car({super.key, required this.userArg, required this.products, required this.total });
 
   @override
   State<Card_Car> createState() => _Card_CarState();
@@ -750,154 +872,401 @@ class Card_Car extends StatefulWidget {
 
 class _Card_CarState extends State<Card_Car> {
 
-  late String _nombre;
-  late String _descripcion;
-  late int _precio;
-  late String _imagen;
-/*
-  int _counter = 0;
-*/
+  late Map<dynamic, dynamic> _products;
+  late Map<dynamic, dynamic> _userArg;
+  late int _total;
+
+  late List<int> contadores;
+
+   void _incCounter(int index, int precio) {
+      setState(() {
+        if(contadores[index] < 20){
+          contadores[index]++;
+          _total = _total + precio;
+        }
+      });
+    }
+
+  void _decCounter(int index, int precio) {
+    setState(() {
+      if(contadores[index] > 0){
+        contadores[index]--;
+        _total = _total - precio;
+      }
+    });
+  }
+
+  void saveOrderW() {
+    setState(() {
+      Map<String, dynamic> orders = {};
+      for (var i = 0; i < contadores.length; i++) {
+        if (contadores[i] > 0) {
+          Map<String, dynamic> nuevosDatos = {
+            '${i+1}': {
+              'nombre': _products['${i+1}']['nombre'],
+              'nombrevar': _products['${i+1}']['nombrevar'],
+              'precio': _products['${i+1}']['precio']*contadores[i],
+              'cantidad': contadores[i],
+            }
+          };
+          orders.addAll(nuevosDatos);
+        }
+      }
+      saveOrder(_userArg['user']['doc_id'], orders, _total);
+      
+      _userArg['products'] = {};
+      Navigator.pop(context);
+      Navigator.of(context).pushNamed("/order", arguments: _userArg);
+    });
+  }
+
   @override
   void initState() {
     super.initState();
-    _nombre = widget.nombre;
-    _descripcion = widget.descripcion;
-    _precio = widget.precio;
-    _imagen = widget.imagen;
+    _products = widget.products;
+    _userArg = widget.userArg;
+    _total = widget.total;
+    contadores = List.generate(_products.length, (index) => 0);
+    for (var i = 0; i < _products.length; i++) {
+      contadores[i] = _products['${i+1}']['cantidad'];
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    return Column(
+      children: [
+        ListView.builder(
+          itemCount: _products.length,
+          itemBuilder: (context, index) {
+            return Card(
+              //elevation: 10,
+              //color: Color(color_5),
+              margin: const EdgeInsets.symmetric(vertical: 10),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20)
+              ),
+              child: Column(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 10),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+
+                            Expanded(
+                              child: Column(
+                                children: [
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        '${_products['${index+1}']['nombre']} ${_products['${index+1}']['nombrevar']}',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 14,
+                                          color: Color(color_4)
+                                        ),
+                                      ),
+                                    ]
+                                  ),
+                                ],
+                              ),
+                            ),
+
+                            Padding(
+                              padding: const EdgeInsets.only(right: 10),
+                              child: Container(
+                                width: 70,
+                                height: 70,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10.0),
+                                  color: Color(color_5)
+                                ),
+                                child:
+                                FadeInImage(
+                                  placeholder: AssetImage(loadingDefault),
+                                  image: NetworkImage('${_products['${index+1}']['imagen']}'),
+                                  imageErrorBuilder: (context, error, stackTrace) {
+                                    return const Image(image: AssetImage('assets/images/logo.png'));
+                                  },
+                                  placeholderErrorBuilder: (context, error, stackTrace) {
+                                    return const Image(image: AssetImage('assets/images/logo.png'));
+                                  },
+                                )
+                              ),
+                            ),
+
+                          ],
+                        ),
+
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Container(
+                              margin: const EdgeInsets.only(top: 10),
+                              padding: const EdgeInsets.symmetric(horizontal: 5),
+                              width: 100,
+                              height: 25,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                color: Color(color_5)
+                              ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    'MX\$ ${_products['${index+1}']['precio']}',
+                                    style: const TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w500,
+                                      color: Colors.black87,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+
+                            Container(
+                            width: 90,
+                            height: 30,
+                            decoration: BoxDecoration(
+                              color: Color(color_5),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+
+                                Container(
+                                  width: 30,
+                                  height: 30,
+                                  decoration: BoxDecoration(
+                                    color: Color(color_8),
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  child: IconButton(
+                                    icon: Icon(
+                                      Icons.remove,
+                                      color: Color(color_4),
+                                      size: 15,
+                                    ),
+                                    onPressed: () {
+                                      _decCounter(index, _products['${index+1}']['precio']);
+                                    },
+                                  ),
+                                ),
+
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(horizontal: 0),
+                                  child: Text(
+                                    '${contadores[index]}',
+                                    style: const TextStyle(
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 17,
+                                      ),
+                                  ),
+                                ),
+
+                                Container(
+                                  width: 30,
+                                  height: 30,
+                                  decoration: BoxDecoration(
+                                    color: Color(color_7),
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  child: IconButton(
+                                    icon: Icon(
+                                      Icons.add,
+                                      color: Color(color_4),
+                                      size: 15,
+                                    ),
+                                    onPressed: () {
+                                      _incCounter(index, _products['${index+1}']['precio']);
+                                    },
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+
+                          ],
+                        ),
+
+                      ],
+                    )
+                  ),
+                ]
+              ),
+            );
+            
+          },
+          shrinkWrap: true,
+          physics: const ClampingScrollPhysics(),
+        ),
+
+        Card(
+          //elevation: 10,
+          //color: Color(color_5),
+          margin: const EdgeInsets.symmetric(vertical: 10),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20)
+          ),
+          child: Column(
+            children: [
+              Container(
+                padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+
+                        Expanded(
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.price_change_sharp,
+                                size: 60,
+                                color: Color(color_7),
+                              ),
+                              const VerticalDivider(),
+                              Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 5),
+                                width: 120,
+                                height: 40,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  color: Color(color_5)
+                                ),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      'MX\$ $_total',
+                                      style: const TextStyle(
+                                        fontSize: 25,
+                                        fontWeight: FontWeight.w500,
+                                        color: Colors.black87,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+
+                            ],
+                          ),
+                        ),
+
+                        Container(
+                          width: 100,
+                          height: 40,
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              colors: [Color(color_8), Color(color_7)],
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                            ),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: TextButton(
+                            onPressed: saveOrderW,
+                            style: TextButton.styleFrom(
+                              foregroundColor: Color(color_4),
+                            ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: const [
+                                Text("Ordenar",
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+
+                      ],
+                    ),
+                  ],
+                )
+              ),
+            ]
+          ),
+        ),
+      ],
+    );
+  }
+
+}
+
+// Carrito Vacio
+class Card_Carrito_Vacio extends StatelessWidget {
+  const Card_Carrito_Vacio({super.key});
+
+  @override
+  Widget build(BuildContext context) {
     return Card(
-      //elevation: 10,
-      //color: Color(color_5),
+      //elevation: 0,
+      color: Color(color_5),
       margin: const EdgeInsets.symmetric(vertical: 10),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20)
       ),
-      child: Column(
-        children: [
-          Container(
-            padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 10),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20),
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 10),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: Column(
+          children: [
+            Icon(
+              Icons.remove_shopping_cart, 
+              size: 150,
+              color: Color(color_4),
             ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-
-                    Expanded(
-                      child: Column(
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                '$_nombre',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 14,
-                                  color: Color(color_4)
-                                ),
-                              ),
-                            ]
-                          ),
-
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                '$_descripcion',
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  color: Color(color_4)
-                                ),
-                              ),
-                            ]
-                          ),
-                        ],
-                      ),
-                    ),
-
-                    Container(
-                      margin: const EdgeInsets.only(right: 10),
-                      width: 70,
-                      height: 70,
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                          image: AssetImage('$_imagen'),
-                          fit: BoxFit.scaleDown,
-                        ),
-                        borderRadius: BorderRadius.circular(10.0),
-                        color: Color(color_5)
-                      ),
-                    ),
-
-                  ],
-                ),
-
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Container(
-                      margin: const EdgeInsets.only(top: 10),
-                      padding: const EdgeInsets.symmetric(horizontal: 5),
-                      width: 100,
-                      height: 25,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: Color(color_5)
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Text(
-                            'MX\$ $_precio',
-                            style: const TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w500,
-                              color: Colors.black87,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-
-                    const productCounter(),
-                  ],
-                ),
-
-              ],
-            )
-          ),
-        ]
+            const Divider(
+              color: Colors.transparent,
+              height: 25,
+            ),
+            Text(
+              'Carrito Vacio',
+              style: TextStyle(
+                fontSize: 40,
+                fontWeight: FontWeight.bold,
+                color: Color(color_4),
+              ),
+            ),
+            Text(
+              '¡Agrega alimentos!',
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: Color(color_4),
+              ),
+            ),
+          ],
+        ),
       ),
-    );
+      );
   }
-
-/*
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-      //print('+ pressed');
-    });
-  }
-
-  void _decrementCounter() {
-    setState(() {
-      if(_counter > 0){
-        _counter--;
-      }
-      //print('- pressed');
-    });
-  }
-*/
-
 }
 
 
@@ -915,8 +1284,9 @@ class _productCounterState extends State<productCounter> {
 
   void _incrementCounter() {
     setState(() {
-      _counter++;
-      //print('+ pressed');
+      if(_counter < 20){
+        _counter++;
+      }
     });
   }
 
@@ -925,7 +1295,6 @@ class _productCounterState extends State<productCounter> {
       if(_counter > 0){
         _counter--;
       }
-      //print('- pressed');
     });
   }
 
@@ -1112,6 +1481,38 @@ class Card_Home_Chart extends StatefulWidget {
   @override
   State<Card_Home_Chart> createState() => _Card_Home_ChartState();
 }
+
+// Grafica
+List<PieChartSectionData> sectionsChartUser = [
+  PieChartSectionData(
+    value: 10,
+    title: "70%",
+    showTitle: false,
+    color: Colors.purple,
+    radius: 40,
+  ),
+  PieChartSectionData(
+    value: 30,
+    title: "30%",
+    showTitle: false,
+    color: Colors.blue,
+    radius: 40,
+  ),
+  PieChartSectionData(
+    value: 40,
+    title: "70%",
+    showTitle: false,
+    color: Colors.green,
+    radius: 40,
+  ),
+  PieChartSectionData(
+    value: 20,
+    title: "30%",
+    showTitle: false,
+    color: Colors.red,
+    radius: 40,
+  ),
+];
 
 class _Card_Home_ChartState extends State<Card_Home_Chart> {
   late int _productsNum;
@@ -1376,15 +1777,6 @@ class Card_Home_Gastado extends StatelessWidget {
         ),
       ),
       );
-    
-    
-    
-    
-    
-    
-    
-    
-    
   }
 }
 
@@ -1395,13 +1787,8 @@ class Card_Pedidos_Accordion extends StatefulWidget {
   final String orden;
   final String fecha;
   final String hora;
-  /*
-  final String nombreProducto;
-  final int cantidadProducto;
-  */
   final int total;
-  final Map<String, Map<String, dynamic>> productos;
-
+  final Map<String, dynamic> productos;
 
   const Card_Pedidos_Accordion({super.key, required this.nombreAlumno, required this.orden, required this.fecha, required this.hora, required this.productos, /*required this.nombreProducto, required this.cantidadProducto,*/ required this.total});
 
@@ -1416,11 +1803,7 @@ class _Card_Pedidos_AccordionState extends State<Card_Pedidos_Accordion> {
   late String _orden;
   late String _fecha;
   late String _hora;
-  late Map<String, Map<String, dynamic>> _productos;
-  /*
-  late String _nombreProducto;
-  late int _cantidadProducto;
-  */
+  late Map<String, dynamic> _productos;
   late int _total;
 
   @override
@@ -1431,19 +1814,11 @@ class _Card_Pedidos_AccordionState extends State<Card_Pedidos_Accordion> {
     _fecha = widget.fecha;
     _hora = widget.hora;
     _productos = widget.productos;
-    /*
-    _nombreProducto = widget.nombreProducto;
-    _cantidadProducto = widget.cantidadProducto;
-    */
     _total = widget.total;
   }
 
   @override
   Widget build(BuildContext context) {
-/*
-    print(_productos['producto2']);
-    print(_productos['producto1']);
-*/
 
     return Card(
       //elevation: 10,
@@ -1537,52 +1912,56 @@ class _Card_Pedidos_AccordionState extends State<Card_Pedidos_Accordion> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
 
+
                               Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text('${_productos['producto1']!['nombreProducto']}'),
-                                  const Divider(height: 5),
-                                  Text('${_productos['producto2']!['nombreProducto']}'),
-                                ],
+                                children: _productos.keys.map((llave) {
+                                  String nombre = _productos[llave]['nombre'];
+                                  String nombrevar = _productos[llave]['nombrevar'];
+                                  return Column(
+                                    children: [
+                                      Text('x${_productos[llave]['cantidad']} - $nombre $nombrevar'),
+                                      const Divider(height: 5),
+                                    ],
+                                  );
+                                }).toList(),
+    
                               ),
                               Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text('MX\$ ${_productos['producto1']!['cantidadProducto']}'),
-                                  const Divider(height: 5),
-                                  Text('MX\$ ${_productos['producto2']!['cantidadProducto']}'),
-                                ],
+                                children: _productos.keys.map((llave) {
+                                  return Column(
+                                    children: [
+                                      Text('MX\$ ${_productos[llave]['precio']}'),
+                                      const Divider(height: 5),
+                                    ],
+                                  );
+                                }).toList(),
                               ),
 
-                              /*
-                                ListView.builder (
-                                  shrinkWrap: true,
-                                  physics: NeverScrollableScrollPhysics(),
-                                  itemCount: _productos.length,
-                                  itemBuilder: (BuildContext context, int index) {
-                                    return Column(
-                                      children: [
-                                        Column(
-                                          mainAxisAlignment: MainAxisAlignment.center,
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            //Text('${_productos['nombreProducto${index+1}']}'),
-                                          ],
-                                        ),
-                                        Column(
-                                          mainAxisAlignment: MainAxisAlignment.center,
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            //Text('${_productos['cantidadProducto${index+1}']}'),
-                                          ],
-                                        ),
-                                      ]
-                                    );
-                                  },
-                                ),
-                              */
+
+/*
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text('x${_productos['1']['cantidad']} - ${_productos['1']['nombre']} ${_productos['1']['nombrevar']}'),
+                                  const Divider(height: 5),
+                                  Text('x${_productos['2']['cantidad']} - ${_productos['2']['nombre']} ${_productos['2']['nombrevar']}'),
+                                ],
+                              ),
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text('MX\$ ${_productos['1']['precio']}'),
+                                  const Divider(height: 5),
+                                  Text('MX\$ ${_productos['2']['precio']}'),
+                                ],
+                              ),
+*/
 
                             ],
                           ),
@@ -1753,10 +2132,6 @@ class _Card_Pedidos_Accordion_CafeState extends State<Card_Pedidos_Accordion_Caf
   late String _fecha;
   late String _hora;
   late Map<String, Map<String, dynamic>> _productos;
-  /*
-  late String _nombreProducto;
-  late int _cantidadProducto;
-  */
   late int _total;
 
   @override
@@ -1767,10 +2142,6 @@ class _Card_Pedidos_Accordion_CafeState extends State<Card_Pedidos_Accordion_Caf
     _fecha = widget.fecha;
     _hora = widget.hora;
     _productos = widget.productos;
-    /*
-    _nombreProducto = widget.nombreProducto;
-    _cantidadProducto = widget.cantidadProducto;
-    */
     _total = widget.total;
   }
 
@@ -2272,54 +2643,7 @@ class _Card_Calendar_Accordion_CafeState extends State<Card_Calendar_Accordion_C
 }
 
 
-/*
-class _Card_Pedidos_AccordionState extends State<Card_Pedidos_Accordion> {
-  bool _isExpanded = false;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        InkWell(
-          onTap: () {
-            setState(() {
-              _isExpanded = !_isExpanded;
-            });
-          },
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Text(
-                widget.title,
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 18,
-                ),
-              ),
-              Icon(
-                _isExpanded ? Icons.arrow_drop_up : Icons.arrow_drop_down,
-                size: 30,
-              ),
-            ],
-          ),
-        ),
-        _isExpanded
-            ? Container(
-                margin: const EdgeInsets.only(left: 10, top: 10),
-                child: Text(
-                  widget.content,
-                  style: const TextStyle(fontSize: 16),
-                ),
-              )
-            : const SizedBox.shrink(),
-      ],
-    );
-  }
-}
-*/
-
-
+// Card CRUD
 class Card_Crud extends StatefulWidget {
   final String nombre;
   final String descripcion;

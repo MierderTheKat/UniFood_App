@@ -55,7 +55,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyDxmsiL7ysB4koKj9PXMmYhrzRxqFJeHcI',
-    appId: '1:1083188994092:android:c2b87a47beec4dd4c23189',
+    appId: '1:1083188994092:android:2fdd0f772c1a10dfc23189',
     messagingSenderId: '1083188994092',
     projectId: 'unifood-75d09',
     storageBucket: 'unifood-75d09.appspot.com',
@@ -63,21 +63,21 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyA8-VD6VjLytRIakbaHZSQIvB8uAgyTlvU',
-    appId: '1:1083188994092:ios:db92b1f518d517a5c23189',
+    appId: '1:1083188994092:ios:cf4b7ddfdd543cbec23189',
     messagingSenderId: '1083188994092',
     projectId: 'unifood-75d09',
     storageBucket: 'unifood-75d09.appspot.com',
-    iosClientId: '1083188994092-vebc16sihu2jli92dtkv74qhvsutosk6.apps.googleusercontent.com',
-    iosBundleId: 'com.example.zzunifood',
+    iosClientId: '1083188994092-a1m6k2e47amkm97v43lt6390df7bjdgb.apps.googleusercontent.com',
+    iosBundleId: 'com.example.unifood',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
     apiKey: 'AIzaSyA8-VD6VjLytRIakbaHZSQIvB8uAgyTlvU',
-    appId: '1:1083188994092:ios:db92b1f518d517a5c23189',
+    appId: '1:1083188994092:ios:cf4b7ddfdd543cbec23189',
     messagingSenderId: '1083188994092',
     projectId: 'unifood-75d09',
     storageBucket: 'unifood-75d09.appspot.com',
-    iosClientId: '1083188994092-vebc16sihu2jli92dtkv74qhvsutosk6.apps.googleusercontent.com',
-    iosBundleId: 'com.example.zzunifood',
+    iosClientId: '1083188994092-a1m6k2e47amkm97v43lt6390df7bjdgb.apps.googleusercontent.com',
+    iosBundleId: 'com.example.unifood',
   );
 }

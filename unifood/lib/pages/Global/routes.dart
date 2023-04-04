@@ -8,9 +8,11 @@ export '/../firebase_options.dart';
 export 'package:cloud_firestore/cloud_firestore.dart';
 export 'package:firebase_storage/firebase_storage.dart';
 
-export 'package:image_cropper/image_cropper.dart';
-export 'package:fl_chart/fl_chart.dart';
 export 'package:image_picker/image_picker.dart';
+export 'package:image_cropper/image_cropper.dart';
+export 'package:flutter_image_compress/flutter_image_compress.dart';
+
+export 'package:fl_chart/fl_chart.dart';
 export 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 export '../Global/colores.dart';

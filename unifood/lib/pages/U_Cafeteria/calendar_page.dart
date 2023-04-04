@@ -17,6 +17,8 @@ class _CafeCalendarPageState extends State<CafeCalendarPage> {
   @override
   Widget build(BuildContext context) {
 
+    final Map userArg = ModalRoute.of(context)!.settings.arguments as Map;
+
     Map<String, Map<String, dynamic>> _pedidos = {
       'pedido1': {
         'nombreAlumno': 'Francisco Javier Rivera',
@@ -61,48 +63,49 @@ class _CafeCalendarPageState extends State<CafeCalendarPage> {
     List<int> _years = List.generate(10, (index) => year - index);
     int _selectedYear = year;
 
-
     List<String> _months = [
       'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
       'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
     ];
     String _selectedMonth = _months[month-1];
 
-
     return Scaffold(
       backgroundColor: Color(color_6),
-      
 
       appBar: AppBar(
-        backgroundColor: Color(color_1),
-        elevation: 1,
-        
-        leading: IconButton(
-              onPressed: _onPressBtnUser,
-              icon: const Icon(Icons.person),
+          backgroundColor: Color(color_1),
+          elevation: 1,
+          
+          leading: IconButton(
+                onPressed: (){
+                  _onPressBtnUser(userArg);
+                },
+                icon: const Icon(Icons.person),
+                iconSize: 40,
+                color: Color(color_2),
+              ),
+              
+          actions: <Widget> [
+            IconButton(
+              onPressed: (){
+                _onPressBtnCalendar(userArg);
+              },
+              icon: const Icon(Icons.calendar_month),
               iconSize: 40,
               color: Color(color_2),
             ),
-            
-        actions: <Widget> [
-          IconButton(
-            onPressed: _onPressBtnCalendar,
-            icon: const Icon(Icons.calendar_month),
-            iconSize: 40,
-            color: Color(color_2),
-          ),
-        ],
-        
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Image.asset(
-              "assets/images/logo_global.png",
-              width: 200,
-            ),
           ],
+          
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Image.asset(
+                "assets/images/logo_global.png",
+                width: 200,
+              ),
+            ],
+          ),
         ),
-      ),
 
       body: Center(
         child: ListView(
@@ -185,7 +188,6 @@ class _CafeCalendarPageState extends State<CafeCalendarPage> {
                     onChanged: (year) {
                       setState(() {
                         _selectedYear = year!;
-                        print(_selectedYear);
                       });
                     },
                     items: _years.map((int year) {
@@ -206,7 +208,6 @@ class _CafeCalendarPageState extends State<CafeCalendarPage> {
                     onChanged: (String? month) {
                       setState(() {
                         _selectedMonth = month!;
-                        print(_selectedMonth);
                       });
                     },
                     items: _months.map((String month) {
@@ -408,19 +409,25 @@ class _CafeCalendarPageState extends State<CafeCalendarPage> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget> [
               IconButton(
-                onPressed: _onPressBtnHome,
+                onPressed: (){
+                  _onPressBtnHome(userArg);
+                },
                 icon: const Icon(Icons.home),
                 color: Color(color_2),
                 iconSize: 40,
               ),
               IconButton(
-                onPressed: _onPressBtnCrud,
+                onPressed:  (){
+                  _onPressBtnCrud(userArg);
+                },
                 icon: const Icon(Icons.restaurant),
                 color: Color(color_2),
                 iconSize: 40,
               ),
               IconButton(
-                onPressed: _onPressBtnPedidos,
+                onPressed:  (){
+                  _onPressBtnPedidos(userArg);
+                },
                 icon: const Icon(Icons.edit_document),
                 color: Color(color_2),
                 iconSize: 40,
@@ -434,28 +441,22 @@ class _CafeCalendarPageState extends State<CafeCalendarPage> {
     );
   }
 
-  void _onPressBtnUser() {
-    print("Boton User Cafe");
+  void _onPressBtnUser(userArg) {
     Navigator.pop(context);
-    Navigator.of(context).pushNamed("/c_profile");
+    Navigator.of(context).pushNamed("/c_profile", arguments: userArg);
   }
-  void _onPressBtnCalendar() {
-    print("Boton Calendario Cafe");
-  }
-  void _onPressBtnHome() {
-    print("Boton Home Cafe");
+  void _onPressBtnCalendar(userArg) {}
+  void _onPressBtnHome(userArg) {
     Navigator.pop(context);
-    Navigator.of(context).pushNamed("/c_home");
+    Navigator.of(context).pushNamed("/c_home", arguments: userArg);
   }
-  void _onPressBtnCrud() {
-    print("Boton CRUD Cafe");
+  void _onPressBtnCrud(userArg) {
     Navigator.pop(context);
-    Navigator.of(context).pushNamed("/c_crud");
+    Navigator.of(context).pushNamed("/c_crud", arguments: userArg);
   }
-  void _onPressBtnPedidos() {
-    print("Boton Pedidos Cafe");
+  void _onPressBtnPedidos(userArg) {
     Navigator.pop(context);
-    Navigator.of(context).pushNamed("/c_order");
+    Navigator.of(context).pushNamed("/c_order", arguments: userArg);
   }
 
 }
